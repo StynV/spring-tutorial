@@ -1,10 +1,10 @@
 package com.styn.quickstart.services.impl;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.styn.quickstart.services.RedPrinter;
 
-@Component
+@Service
 public class DutchRedPrinter implements RedPrinter {
     @Override
     public String print() {
