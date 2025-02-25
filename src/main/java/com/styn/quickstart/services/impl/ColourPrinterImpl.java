@@ -1,10 +1,13 @@
 package com.styn.quickstart.services.impl;
 
+import org.springframework.stereotype.Component;
+
 import com.styn.quickstart.services.BluePrinter;
 import com.styn.quickstart.services.ColourPrinter;
 import com.styn.quickstart.services.GreenPrinter;
 import com.styn.quickstart.services.RedPrinter;
 
+@Component
 public class ColourPrinterImpl implements ColourPrinter {
     private RedPrinter redPrinter;
     private BluePrinter bluePrinter;
