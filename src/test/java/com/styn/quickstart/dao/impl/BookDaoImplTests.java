@@ -5,12 +5,12 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.styn.quickstart.dao.impl.BookDaoImpl;
 import com.styn.quickstart.domain.Book;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +35,18 @@ public class BookDaoImplTests {
         verify(jdbcTemplate).update(
             eq("INSERT INTO books (isbn, title, author_id) VALUES (?, ?, ?)"),
             eq("isbn"), eq("title"), eq(1L)
+        );
+    }
+
+    
+    @Test
+    public void testThatFindOneGeneratesTheCorrectSQL() {
+        underTest.findOne("isbn");
+
+        verify(jdbcTemplate).query(
+            eq("SELECT isbn, title, author_id FROM books WHERE isbn = ? LIMIT 1"),
+            ArgumentMatchers.<BookDaoImpl.BookRowMapper>any(),
+            eq("isbn")
         );
     }
 }
