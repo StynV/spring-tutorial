@@ -51,4 +51,11 @@ public class BookDaoImpl implements BookDao {
                 .build();
         }
     }
+
+    public List<Book> find() {
+        return jdbcTemplate.query(
+            "SELECT isbn, title, author_id FROM books",
+            new BookRowMapper()
+        );
+    }
 }
