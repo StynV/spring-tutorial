@@ -7,10 +7,12 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.styn.quickstart.dao.BookDao;
 import com.styn.quickstart.domain.Book;
 
+@Component
 public class BookDaoImpl implements BookDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -43,7 +45,7 @@ public class BookDaoImpl implements BookDao {
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
             return Book.builder()
-                .isbn(rs.getString("id"))
+                .isbn(rs.getString("isbn"))
                 .title(rs.getString("title"))
                 .author_id(rs.getLong("author_id"))
                 .build();

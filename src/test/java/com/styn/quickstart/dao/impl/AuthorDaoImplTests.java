@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.styn.quickstart.TestDataUtil;
 import com.styn.quickstart.domain.Author;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,11 +27,7 @@ public class AuthorDaoImplTests {
 
     @Test
     public void testThatCreateAuthorGeneratesCorrectSQL() {
-        Author author = Author.builder()
-            .id(1L)
-            .name("name")
-            .age(80)
-            .build();
+        Author author = TestDataUtil.createTestAuthor();
 
         underTest.create(author);
 
@@ -39,6 +36,7 @@ public class AuthorDaoImplTests {
             eq(1L), eq("name"), eq(80)
         );
     }
+
 
     @Test
     public void testThatFindOneGeneratesTheCorrectSQL() {
