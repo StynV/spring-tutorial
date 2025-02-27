@@ -31,7 +31,7 @@ public class BookDaoImplTests {
 
         verify(jdbcTemplate).update(
             eq("INSERT INTO books (isbn, title, author_id) VALUES (?, ?, ?)"),
-            eq("isbn"), eq("title"), eq(1L)
+            eq("isbnA"), eq("titleA"), eq(1L)
         );
     }
     
