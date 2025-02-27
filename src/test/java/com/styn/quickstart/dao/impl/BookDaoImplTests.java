@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.styn.quickstart.TestDataUtil;
+import com.styn.quickstart.domain.Author;
 import com.styn.quickstart.domain.Book;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,6 +66,17 @@ public class BookDaoImplTests {
         verify(jdbcTemplate).update(
             "UPDATE books SET isbn = ?, title = ?, authod_id = ? WHERE isbn = ?",
             "isbnA", "titleA", 1L, "isbnA"
+        );
+    }
+
+        @Test
+    public void testThatDeleteGeneratesTheCorrectSQL() {
+        Book book = TestDataUtil.createTestBookA();
+        underTest.delete(book.getIsbn());
+
+        verify(jdbcTemplate).update(
+            "DELETE FROM books WHERE isbn = ?",
+            "isbnA"
         );
     }
 }
