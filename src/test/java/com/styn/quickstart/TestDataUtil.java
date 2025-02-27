@@ -7,11 +7,35 @@ public class TestDataUtil {
 
     private TestDataUtil() {}
 
-    public static Author createTestAuthor() {
+    public static Author createTestAuthorA() {
         return Author.builder()
             .id(1L)
-            .name("name")
-            .age(80)
+            .name("nameA")
+            .age(81)
+            .build();
+    }
+
+    public static Author createTestAuthorB() {
+        return Author.builder()
+            .id(2L)
+            .name("nameB")
+            .age(81)
+            .build();
+    }
+
+    public static Author createTestAuthorC() {
+        return Author.builder()
+            .id(3L)
+            .name("nameC")
+            .age(82)
+            .build();
+    }
+
+    public static Author createTestAuthorD() {
+        return Author.builder()
+            .id(4L)
+            .name("nameD")
+            .age(83)
             .build();
     }
 
