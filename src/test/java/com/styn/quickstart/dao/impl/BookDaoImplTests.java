@@ -64,7 +64,7 @@ public class BookDaoImplTests {
         underTest.update("isbnA", book);
 
         verify(jdbcTemplate).update(
-            "UPDATE books SET isbn = ?, title = ?, authod_id = ? WHERE isbn = ?",
+            "UPDATE books SET isbn = ?, title = ?, author_id = ? WHERE isbn = ?",
             "isbnA", "titleA", 1L, "isbnA"
         );
     }
