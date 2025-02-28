@@ -20,7 +20,7 @@ public class TestDataUtil {
     public static Author createTestAuthorB() {
         return Author.builder()
             .name("nameB")
-            .age(81)
+            .age(41)
             .books(new ArrayList<>())
             .build();
     }
@@ -28,7 +28,7 @@ public class TestDataUtil {
     public static Author createTestAuthorC() {
         return Author.builder()
             .name("nameC")
-            .age(82)
+            .age(10)
             .books(new ArrayList<>())
             .build();
     }

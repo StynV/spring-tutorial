@@ -1,6 +1,5 @@
 package com.styn.quickstart.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -32,5 +31,5 @@ public class Author {
     private Integer age;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
-    private List<Book> books = new ArrayList<>();
+    private List<Book> books;
 }
