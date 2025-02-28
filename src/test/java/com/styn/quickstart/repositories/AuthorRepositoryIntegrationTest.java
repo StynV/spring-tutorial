@@ -113,5 +113,24 @@ public class AuthorRepositoryIntegrationTest {
                 tuple(authorB.getId(), authorB.getName(), authorB.getAge()),
                 tuple(authorC.getId(), authorC.getName(), authorC.getAge())
             );
-        }
+    }
+
+    @Test
+    public void testThatGetAuthorsWithAgeGreaterThan() {
+        Author authorA = TestDataUtil.createTestAuthorA();
+        underTest.save(authorA);
+
+        Author authorB = TestDataUtil.createTestAuthorB();
+        underTest.save(authorB);
+
+        Author authorC = TestDataUtil.createTestAuthorC();
+        underTest.save(authorC);
+
+        Iterable<Author> result = underTest.findAuthorsWithAgeGreaterThan(50);
+        assertThat(result)
+            .extracting(Author::getId, Author::getName, Author::getAge)
+            .containsExactly(
+                tuple(authorA.getId(), authorA.getName(), authorA.getAge())
+            );
+    }
 }
