@@ -26,7 +26,7 @@ public class JacksonTests {
 
     @Test
     public void testThatObjectMapperCanCreateJavaObjectFromJsonObject() throws JsonProcessingException {
-        String json = "{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"year\":\"yearPublished\"}";
+        String json = "{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"year\":\"yearPublished\",\"foo\":\"bar\"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
         APIBook result = objectMapper.readValue(json, APIBook.class);
