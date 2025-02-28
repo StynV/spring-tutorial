@@ -1,5 +1,7 @@
 package com.styn.quickstart;
 
+import java.util.ArrayList;
+
 import com.styn.quickstart.domain.Author;
 import com.styn.quickstart.domain.Book;
 
@@ -9,49 +11,46 @@ public class TestDataUtil {
 
     public static Author createTestAuthorA() {
         return Author.builder()
-            .id(1L)
             .name("nameA")
             .age(81)
+            .books(new ArrayList<>())
             .build();
     }
 
     public static Author createTestAuthorB() {
         return Author.builder()
-            .id(2L)
             .name("nameB")
             .age(81)
+            .books(new ArrayList<>())
             .build();
     }
 
     public static Author createTestAuthorC() {
         return Author.builder()
-            .id(3L)
             .name("nameC")
             .age(82)
+            .books(new ArrayList<>())
             .build();
     }
 
-    public static Book createTestBookA() {
+    public static Book createTestBookA(Author author) {
         return Book.builder()
-            .isbn("isbnA")
             .title("titleA")
-            .author_id(1L)
+            .author(author)
             .build();
     }
 
-    public static Book createTestBookB() {
+    public static Book createTestBookB(Author author) {
         return Book.builder()
-            .isbn("isbnB")
             .title("titleB")
-            .author_id(2L)
+            .author(author)
             .build();
     }
 
-    public static Book createTestBookC() {
+    public static Book createTestBookC(Author author) {
         return Book.builder()
-            .isbn("isbnC")
             .title("titleC")
-            .author_id(3L)
+            .author(author)
             .build();
     }
 }
