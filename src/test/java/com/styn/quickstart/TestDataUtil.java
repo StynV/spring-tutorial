@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.styn.quickstart.domain.Author;
 import com.styn.quickstart.domain.Book;
+import com.styn.quickstart.domain.dto.AuthorDto;
+import com.styn.quickstart.domain.dto.BookDto;
 
 public class TestDataUtil {
 
@@ -33,22 +35,33 @@ public class TestDataUtil {
             .build();
     }
 
-    public static Book createTestBookA(Author author) {
+    public static Book createTestBookA(final Author author) {
         return Book.builder()
+            .isbn("isbnA")
             .title("titleA")
             .author(author)
             .build();
     }
 
-    public static Book createTestBookB(Author author) {
+    public static BookDto createTestBookDto(final AuthorDto author) {
+        return BookDto.builder()
+            .isbn("isbnA")
+            .title("titleA")
+            .author(author)
+            .build();
+    }
+
+    public static Book createTestBookB(final Author author) {
         return Book.builder()
+            .isbn("isbnB")
             .title("titleB")
             .author(author)
             .build();
     }
 
-    public static Book createTestBookC(Author author) {
+    public static Book createTestBookC(final Author author) {
         return Book.builder()
+            .isbn("isbnC")
             .title("titleC")
             .author(author)
             .build();

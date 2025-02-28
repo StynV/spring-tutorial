@@ -1,31 +1,38 @@
 package com.styn.quickstart.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.styn.quickstart.domain.APIBook;
-
-import lombok.extern.java.Log;
+import com.styn.quickstart.domain.Book;
+import com.styn.quickstart.domain.dto.BookDto;
+import com.styn.quickstart.mappers.Mapper;
+import com.styn.quickstart.services.BookService;
 
 @RestController
-@Log
 public class BookController {
-    
-    @GetMapping(path = "/books")
-    public APIBook retrieveBooks() {
-        return APIBook.builder()
-            .isbn("isbn")
-            .title("title")
-            .author("author")
-            .yearPublished("yearPublished")
-            .build();
+
+    private Mapper<Book, BookDto> bookMapper;
+
+    private BookService bookService;
+
+    public BookController(Mapper<Book, BookDto> bookMapper, BookService bookService) {
+        this.bookMapper = bookMapper;
+        this.bookService = bookService;
     }
 
-    @PostMapping(path = "/books")
-    public APIBook createBook(@RequestBody final APIBook book) {
-        log.info("Got book: " + book.toString());
-        return book;
+    @PutMapping("/books/{isbn}")
+    public ResponseEntity<BookDto> createBook(
+        @PathVariable("isbn") String isbn,
+        @RequestBody BookDto bookDto
+    ) {
+        Book book = bookMapper.mapFrom(bookDto);
+        Book savedBook = bookService.createBook(isbn, book);
+        BookDto savedBookDto = bookMapper.mapTo(savedBook);
+
+        return new ResponseEntity<>(savedBookDto, HttpStatus.CREATED);
     }
 }
