@@ -21,12 +21,12 @@ public class JacksonTests {
         .build();
 
         String result = objectMapper.writeValueAsString(book);
-        assertThat(result).isEqualTo("{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"yearPublished\":\"yearPublished\"}");
+        assertThat(result).isEqualTo("{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"year\":\"yearPublished\"}");
     }
 
     @Test
     public void testThatObjectMapperCanCreateJavaObjectFromJsonObject() throws JsonProcessingException {
-        String json = "{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"yearPublished\":\"yearPublished\"}";
+        String json = "{\"isbn\":\"isbn\",\"title\":\"title\",\"author\":\"author\",\"year\":\"yearPublished\"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
         APIBook result = objectMapper.readValue(json, APIBook.class);

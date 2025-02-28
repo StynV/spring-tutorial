@@ -1,6 +1,8 @@
 package com.styn.quickstart.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +19,6 @@ public class APIBook {
 
     private String author;
     
+    @JsonProperty("year")
     private String yearPublished;
 }
