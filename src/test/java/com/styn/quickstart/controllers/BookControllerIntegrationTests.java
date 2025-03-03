@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.styn.quickstart.TestDataUtil;
+import com.styn.quickstart.domain.Book;
 import com.styn.quickstart.domain.dto.BookDto;
+import com.styn.quickstart.services.BookService;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -22,6 +24,9 @@ import com.styn.quickstart.domain.dto.BookDto;
 @AutoConfigureMockMvc
 public class BookControllerIntegrationTests {
     
+    @Autowired
+    private BookService bookService;
+
     @Autowired
     private MockMvc mockMvc;
     
@@ -57,6 +62,31 @@ public class BookControllerIntegrationTests {
             MockMvcResultMatchers.jsonPath("$.isbn").exists()
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle())
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsHttpStatus200() throws Exception {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsListOfAuthors() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        bookService.createBook(book.getIsbn(), book);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].isbn").exists()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].title").value(book.getTitle())
         );
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.styn.quickstart.TestDataUtil;
 import com.styn.quickstart.domain.Author;
+import com.styn.quickstart.services.AuthorService;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -22,6 +23,9 @@ import com.styn.quickstart.domain.Author;
 @AutoConfigureMockMvc
 public class AuthorControllerIntegrationTests {
     
+    @Autowired
+    private AuthorService authorService;
+
     @Autowired
     private MockMvc mockMvc;
     
@@ -61,6 +65,33 @@ public class AuthorControllerIntegrationTests {
             MockMvcResultMatchers.jsonPath("$.name").value("nameA")
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.age").value(81)
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsHttpStatus200() throws Exception {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/authors")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsListOfAuthors() throws Exception {
+        Author author = TestDataUtil.createTestAuthorA();
+        authorService.createAuthor(author);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/authors")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].name").value("nameA")
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].age").value(81)
         );
     }
 }

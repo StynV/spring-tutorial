@@ -1,5 +1,9 @@
 package com.styn.quickstart.services.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
 
 import com.styn.quickstart.domain.Book;
@@ -24,5 +28,13 @@ public class BookServiceImpl implements BookService{
         
         return bookRepository.save(book);
     }
-    
+
+    @Override
+    public List<Book> findAll() {
+        return StreamSupport.stream(bookRepository
+                .findAll()
+                .spliterator(),
+                false)
+            .collect(Collectors.toList());
+    }
 }
