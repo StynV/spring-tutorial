@@ -1,6 +1,7 @@
 package com.styn.quickstart.controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -46,5 +47,14 @@ public class BookController {
         return books.stream()
             .map(bookMapper::mapTo)
             .collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/books/{id}")
+    public ResponseEntity<BookDto> getAuthor(@PathVariable("id") String isbn) {
+        Optional<Book> foundBook = bookService.findOne(isbn);
+        return foundBook.map(book -> {
+            BookDto bookDto = bookMapper.mapTo(book);
+            return new ResponseEntity<>(bookDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

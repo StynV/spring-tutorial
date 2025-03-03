@@ -1,6 +1,7 @@
 package com.styn.quickstart.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -31,5 +32,10 @@ public class AuthorServiceImpl implements AuthorService {
                 .spliterator(),
                 false)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Author> findOne(Long id) {
+        return authorRepository.findById(id);
     }
 }
