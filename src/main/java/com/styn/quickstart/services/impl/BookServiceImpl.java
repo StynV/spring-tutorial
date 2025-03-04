@@ -7,7 +7,9 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 
+import com.styn.quickstart.domain.Author;
 import com.styn.quickstart.domain.Book;
+import com.styn.quickstart.repositories.AuthorRepository;
 import com.styn.quickstart.repositories.BookRepository;
 import com.styn.quickstart.services.BookService;
 
@@ -17,14 +19,27 @@ import jakarta.transaction.Transactional;
 public class BookServiceImpl implements BookService{
 
     private BookRepository bookRepository;
+    
+    private AuthorRepository authorRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     @Transactional
     @Override
     public Book save(String isbn, Book book) {
+        if (book.getAuthor() != null) {
+            Optional<Author> author = authorRepository.findByName(book.getAuthor().getName());
+        
+            if (author.isPresent()) {
+                book.setAuthor(author.get());
+            } else {
+                Author newAuthor = authorRepository.save(book.getAuthor());
+                book.setAuthor(newAuthor);
+            }
+        } 
         book.setIsbn(isbn);
         
         return bookRepository.save(book);

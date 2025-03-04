@@ -14,8 +14,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.styn.quickstart.TestDataUtil;
+import com.styn.quickstart.domain.Author;
 import com.styn.quickstart.domain.Book;
+import com.styn.quickstart.domain.dto.AuthorDto;
 import com.styn.quickstart.domain.dto.BookDto;
+import com.styn.quickstart.services.AuthorService;
 import com.styn.quickstart.services.BookService;
 
 @SpringBootTest
@@ -26,6 +29,9 @@ public class BookControllerIntegrationTests {
     
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private AuthorService authorService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,6 +67,49 @@ public class BookControllerIntegrationTests {
             MockMvcResultMatchers.jsonPath("$.isbn").exists()
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle())
+        );
+    }
+
+    @Test
+    public void testThatCreateBookWithNewAuthorReturnsSavedBook() throws Exception {
+        Author author = TestDataUtil.createTestAuthorA();
+        authorService.save(author);
+        
+        AuthorDto authorDto = TestDataUtil.createTestAuthorDtoA();
+        BookDto book = TestDataUtil.createTestBookDto(authorDto);
+
+        String bookJSON = objectMapper.writeValueAsString(book);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/books/" + book.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.isbn").exists()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle())
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.author.name").value(author.getName())
+        );
+    }
+
+    @Test
+    public void testThatCreateBookWithExistingAuthorReturnsSavedBook() throws Exception {
+        AuthorDto authorDto = TestDataUtil.createTestAuthorDtoA();
+        BookDto book = TestDataUtil.createTestBookDto(authorDto);
+
+        String bookJSON = objectMapper.writeValueAsString(book);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/books/" + book.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.isbn").exists()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle())
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.author.name").value(authorDto.getName())
         );
     }
 
