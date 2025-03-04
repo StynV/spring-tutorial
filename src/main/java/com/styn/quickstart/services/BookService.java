@@ -7,10 +7,11 @@ import com.styn.quickstart.domain.Book;
 
 public interface BookService {
     
-    Book createBook(String isbn, Book book);
+    Book save(String isbn, Book book);
 
     List<Book> findAll();
     
     Optional<Book> findOne(String isbn);
 
+    boolean isExists(String isbn);
 }

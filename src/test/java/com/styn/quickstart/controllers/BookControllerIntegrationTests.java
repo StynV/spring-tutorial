@@ -36,7 +36,6 @@ public class BookControllerIntegrationTests {
     @Test
     public void testThatCreateBookReturnsHttp201Created() throws Exception {
         BookDto book = TestDataUtil.createTestBookDto(null);
-
         String bookJSON = objectMapper.writeValueAsString(book);
 
         mockMvc.perform(
@@ -49,7 +48,7 @@ public class BookControllerIntegrationTests {
     }
 
     @Test
-    public void testThatCreateBookReturnsSavedAuthor() throws Exception {
+    public void testThatCreateBookReturnsSavedBook() throws Exception {
         BookDto book = TestDataUtil.createTestBookDto(null);
 
         String bookJSON = objectMapper.writeValueAsString(book);
@@ -66,7 +65,7 @@ public class BookControllerIntegrationTests {
     }
 
     @Test
-    public void testThatListAuthorsReturnsHttpStatus200() throws Exception {
+    public void testThatListBooksReturnsHttpStatus200() throws Exception {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -76,9 +75,9 @@ public class BookControllerIntegrationTests {
     }
 
     @Test
-    public void testThatListAuthorsReturnsListOfAuthors() throws Exception {
+    public void testThatListBooksReturnsListOfBooks() throws Exception {
         Book book = TestDataUtil.createTestBookA(null);
-        bookService.createBook(book.getIsbn(), book);
+        bookService.save(book.getIsbn(), book);
         
         mockMvc.perform(
             MockMvcRequestBuilders.get("/books")
@@ -93,7 +92,7 @@ public class BookControllerIntegrationTests {
     @Test
     public void testThatGetBookReturnsHttpStatus200WhenBookExists() throws Exception {
         Book book = TestDataUtil.createTestBookA(null);
-        bookService.createBook(book.getIsbn(), book);
+        bookService.save(book.getIsbn(), book);
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/books/" + book.getIsbn())
@@ -117,7 +116,7 @@ public class BookControllerIntegrationTests {
     @Test
     public void testThatGetBookReturnsBook() throws Exception {
         Book book = TestDataUtil.createTestBookA(null);
-        bookService.createBook(book.getIsbn(), book);
+        bookService.save(book.getIsbn(), book);
         
         mockMvc.perform(
             MockMvcRequestBuilders.get("/books/" + book.getIsbn())
@@ -126,6 +125,44 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.isbn").exists()
             ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle())
+        );
+    }
+    
+    @Test
+    public void testThatUpdateBooksReturnsHttpStatus200() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        Book savedBook = bookService.save(book.getIsbn(), book);
+
+        BookDto bookDto = TestDataUtil.createTestBookDto(null);
+        book.setIsbn(savedBook.getIsbn());
+        String bookJSON = objectMapper.writeValueAsString(bookDto);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/books/" + bookDto.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatUpdateBooksReturnsUpdatedBook() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        Book savedBook = bookService.save(book.getIsbn(), book);
+
+        BookDto bookDto = TestDataUtil.createTestBookDto(null);
+        bookDto.setTitle("updatedTitleA");
+        String bookJSON = objectMapper.writeValueAsString(bookDto);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/books/" + savedBook.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.isbn").exists()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value(bookDto.getTitle())
         );
     }
 }
