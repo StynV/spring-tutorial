@@ -165,4 +165,56 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.title").value(bookDto.getTitle())
         );
     }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsHttpStatus404WhenNoBookExists() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        String bookJSON = objectMapper.writeValueAsString(book);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/books/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsHttpStatus200WhenBookExists() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        Book savedBook = bookService.save(book.getIsbn(), book);
+
+        BookDto bookDto = TestDataUtil.createTestBookDto(null);
+        String bookJSON = objectMapper.writeValueAsString(bookDto);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/books/" + savedBook.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsBook() throws Exception {
+        Book book = TestDataUtil.createTestBookA(null);
+        Book savedBook = bookService.save(book.getIsbn(), book);
+
+        BookDto bookDto = TestDataUtil.createTestBookDto(null);
+        bookDto.setIsbn(null);
+        bookDto.setTitle("updatedNameAPartial");
+        String bookJSON = objectMapper.writeValueAsString(bookDto);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/books/" + savedBook.getIsbn())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.isbn").exists()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.title").value("updatedNameAPartial")
+        );
+    }
 }

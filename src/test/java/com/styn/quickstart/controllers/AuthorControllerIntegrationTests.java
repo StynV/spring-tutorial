@@ -188,4 +188,59 @@ public class AuthorControllerIntegrationTests {
             MockMvcResultMatchers.jsonPath("$.age").value(81)
         );
     }
+
+    @Test
+    public void testThatPartialUpdateAuthorReturnsHttpStatus404WhenNoAuthorExists() throws Exception {
+        AuthorDto author = TestDataUtil.createTestAuthorDtoA();
+        String authorJSON = objectMapper.writeValueAsString(author);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/authors/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authorJSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateAuthorReturnsHttpStatus200WhenAuthorExists() throws Exception {
+        Author author = TestDataUtil.createTestAuthorA();
+        Author savedAuthor = authorService.save(author);
+
+        AuthorDto authorDto = TestDataUtil.createTestAuthorDtoA();
+        String authorJSON = objectMapper.writeValueAsString(authorDto);
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/authors/" + savedAuthor.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authorJSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateAuthorReturnsAuthor() throws Exception {
+        Author author = TestDataUtil.createTestAuthorA();
+        Author savedAuthor = authorService.save(author);
+
+        AuthorDto authorDto = TestDataUtil.createTestAuthorDtoA();
+        authorDto.setId(null);
+        authorDto.setAge(null);
+        authorDto.setName("updatedNameAPartial");
+        String authorJSON = objectMapper.writeValueAsString(authorDto);
+        
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/authors/" + savedAuthor.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authorJSON)
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.name").value("updatedNameAPartial")
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.age").value(81)
+        );
+    }
 }
